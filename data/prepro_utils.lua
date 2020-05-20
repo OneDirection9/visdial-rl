@@ -32,7 +32,7 @@ function extractFeaturesSplit(model, opt, ndims, preprocessFn, dtype)
     end
 
     local sz = #imList
-    local imFeats = torch.FloatTensor(sz, unpack(ndims))
+    local imFeats = torch.FloatTensor(sz, table.unpack(ndims))
 
     -- feature_dims shall be either 2 (NW format), else 4 (having NCHW format)
     local feature_dims = #imFeats:size()
@@ -67,9 +67,5 @@ function extractFeatures(model, opt, ndims, preprocessFn)
     local h5File = hdf5.open(opt.outName, 'w')
     imFeats = extractFeaturesSplit(model, opt, ndims, preprocessFn, 'train')
     h5File:write('/images_train', imFeats)
-    imFeats = extractFeaturesSplit(model, opt, ndims, preprocessFn, 'val')
-    h5File:write('/images_val', imFeats)
-    imFeats = extractFeaturesSplit(model, opt, ndims, preprocessFn, 'test')
-    h5File:write('/images_test', imFeats)
     h5File:close()
 end
